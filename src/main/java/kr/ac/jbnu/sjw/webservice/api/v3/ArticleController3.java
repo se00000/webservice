@@ -31,7 +31,7 @@ public class ArticleController3 {
 	private long sequence = 1L;
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<ApiResponse<ArticleDto>> getArticle(@PathVariable Long id) {
+	public ResponseEntity<ApiResponse<ArticleDto>> getArticle(@PathVariable("id") Long id) {
 		ArticleDto article = store.get(id);
 		if (article == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -43,9 +43,9 @@ public class ArticleController3 {
 
 	@GetMapping
 	public ResponseEntity<ApiResponse<List<ArticleDto>>> getArticles(
-			@RequestParam(required = false) String keyword,
-			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size)
+			@RequestParam(value = "keyword", required = false) String keyword,
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "size", defaultValue = "10") int size)
 	{
 		List<ArticleDto> result= store.values().stream()
 				.filter(article->keyword == null || article.getTitle().contains(keyword))
@@ -97,7 +97,7 @@ public class ArticleController3 {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<ApiResponse<ArticleDto>> updateArticle(
-			@PathVariable Long id,
+			@PathVariable("id") Long id,
 			@RequestBody ArticleUpdateRequest request) 
 	{
 		ArticleDto article = store.get(id);
@@ -119,7 +119,7 @@ public class ArticleController3 {
 	
 	@PutMapping("/{id}/publish")
 	public ResponseEntity<ApiResponse<ArticleDto>> publishArticle(
-			@PathVariable Long id) {
+			@PathVariable("id") Long id) {
 		ArticleDto article = store.get(id);
 		
 		if (article == null) {
@@ -139,7 +139,7 @@ public class ArticleController3 {
 	
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<ApiResponse<String>> deleteArticle(@PathVariable Long id) {
+	public ResponseEntity<ApiResponse<String>> deleteArticle(@PathVariable("id") Long id) {
 		ArticleDto removed = store.remove(id);
 		
 		if (removed == null) {
