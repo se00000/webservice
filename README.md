@@ -133,7 +133,66 @@ app.maintenance=true
   테스트 중 제목 없이 기사를 작성한 뒤 검색하면 `NullPointerException`으로 **500**이 나는 것을 발견했습니다. 제목 없는 기사가 하나라도 저장되면 모든 검색이 실패하는 문제였습니다. 작성 단계에서 제목이 비어 있으면 **400**을 반환하도록 막았고, 이때 검사를 저장 **전**에 해야 잘못된 데이터가 저장되지 않는다는 것도 확인했습니다.
 
 
-## 8. AI 활용
+## 8. 실행 및 테스트 결과
+
+Postman으로 각 API를 호출한 결과입니다. 서버를 새로 실행한 상태에서 순서대로 요청했습니다.
+
+### POST
+
+| 기사 작성 (201) | 제목 없이 작성 (400) |
+|---|---|
+| ![기사 작성 201](screenshots/01-create-201.png) | ![제목 없이 작성 400](screenshots/02-create-400.png) |
+
+| 헤더 확인 (200) |
+|---|
+| ![헤더 확인 200](screenshots/03-with-header-200.png) |
+
+### GET
+
+| 목록 조회 (200) | 제목 검색 (200) |
+|---|---|
+| ![목록 조회 200](screenshots/04-list-200.png) | ![제목 검색 200](screenshots/05-search-200.png) |
+
+| 단건 조회 (200) | 없는 기사 조회 (404) |
+|---|---|
+| ![단건 조회 200](screenshots/06-get-200.png) | ![없는 기사 조회 404](screenshots/07-get-404.png) |
+
+### PUT
+
+| 기사 수정 (200) | 기사 발행 (200) |
+|---|---|
+| ![기사 수정 200](screenshots/08-update-200.png) | ![기사 발행 200](screenshots/09-publish-200.png) |
+
+| 이미 발행된 기사 발행 (400) |
+|---|
+| ![이미 발행된 기사 400](screenshots/10-publish-400.png) |
+
+### DELETE
+
+| 임시저장 일괄 삭제 (200) | 지울 임시저장 없음 (404) |
+|---|---|
+| ![임시저장 일괄 삭제 200](screenshots/11-drafts-200.png) | ![지울 임시저장 없음 404](screenshots/12-drafts-404.png) |
+
+| 기사 삭제 (200) | 이미 삭제된 기사 (404) |
+|---|---|
+| ![기사 삭제 200](screenshots/13-delete-200.png) | ![이미 삭제된 기사 404](screenshots/14-delete-404.png) |
+
+### 그 밖의 응답 코드
+
+| 서버 오류 (500) | 점검 모드 (503) |
+|---|---|
+| ![서버 오류 500](screenshots/15-error-500.png) | ![점검 모드 503](screenshots/16-maintenance-503.png) |
+
+| 허용되지 않은 메서드 (405) |
+|---|
+| ![허용되지 않은 메서드 405](screenshots/17-method-not-allowed-405.png) |
+
+### 미들웨어 요청 로그 (콘솔)
+
+![콘솔 요청 로그](screenshots/18-console-log.png)
+
+
+## 9. AI 활용
 
 - 작성한 코드의 리뷰와 버그 확인 (주소 매핑 오류, 저장 순서 문제 등)
 - 개념 학습 (제네릭, `static`/`final`, 람다, `ResponseEntity`, 전역 예외 처리, 필터)
