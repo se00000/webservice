@@ -1,4 +1,4 @@
-웹서비스설게 실습1 - 백엔드 프레임워크 실습 과제
+# 웹서비스설계 실습1 - 백엔드 프레임워크 실습 과제
 
 ## 1. 개발 환경
 
@@ -13,6 +13,7 @@
 
 ## 2. 프로젝트 구조
 
+```
 src/main/java/kr/ac/jbnu/sjw/webservice
 ├── WebserviceApplication.java        # 애플리케이션 시작점
 ├── api
@@ -22,6 +23,7 @@ src/main/java/kr/ac/jbnu/sjw/webservice
 │   ├── response/ApiResponse.java     # 표준 응답 형식
 │   └── exception/GlobalExceptionHandler.java  # 전역 예외 처리
 └── config/RequestLoggingFilter.java  # 미들웨어 (요청 로그 + 점검 모드)
+```
 
 ## 3. API 목록 (요구사항 A)
 
@@ -45,21 +47,23 @@ src/main/java/kr/ac/jbnu/sjw/webservice
 
 **성공**
 
-json
+```json
 {
   "status": "success",
   "data": { "...": "..." },
   "message": null
 }
+```
 
 **실패**
 
-`json
+```json
 {
   "status": "error",
   "data": null,
   "message": "기사를 찾을 수 없습니다."
 }
+```
 
 | 필드 | 설명 |
 |---|---|
@@ -80,7 +84,7 @@ json
 | **503** Service Unavailable | 서비스 이용 불가 | 점검 모드가 켜져 있을 때 모든 요청 |
 
 
-## 5. 미들웨어 (요구사항 B)
+## 6. 미들웨어 (요구사항 B)
 
 `config/RequestLoggingFilter.java` — `OncePerRequestFilter`를 상속한 필터로, 모든 요청이 컨트롤러에 도착하기 전에 거칩니다.
 
@@ -88,26 +92,30 @@ json
 
 요청마다 **메서드, URL, 응답 코드, 처리 시간**을 콘솔에 출력합니다.
 
+```
 [POST] /api/v3/articles -> 201 (133ms)
 [POST] /api/v3/articles -> 400 (4ms)
 [GET] /api/v3/articles/99 -> 404 (5ms)
 [PUT] /api/v3/articles/1/publish -> 200 (4ms)
 [GET] /api/v3/articles/error-test -> 500 (5ms)
+```
 
 ### 2) 점검 모드
 
-'application.properties'에 아래 설정을 넣고 서버를 재시작하면, 컨트롤러로 요청을 보내지 않고 모든 요청에 **503**을 반환합니다.
+`application.properties`에 아래 설정을 넣고 서버를 재시작하면, 컨트롤러로 요청을 보내지 않고 모든 요청에 **503**을 반환합니다.
 
-properties
+```properties
 app.maintenance=true
+```
 
-json
+```json
 { "status": "error", "data": null, "message": "서비스 점검 중" }
+```
 
 설정이 없거나 `false`이면 평소처럼 동작합니다.
 
 
-## 6. 설계하면서 고민한 점
+## 7. 설계하면서 고민한 점
 
 - **익명 서비스로 이름을 받지 않음**
   처음에는 `reporter`(기자 이름) 필드를 넣으려 했지만, 콘셉트에 맞지 않아 뺐습니다. 기사 데이터는 `id`, `title`, `content`, `published`만 가집니다.
@@ -125,7 +133,7 @@ json
   테스트 중 제목 없이 기사를 작성한 뒤 검색하면 `NullPointerException`으로 **500**이 나는 것을 발견했습니다. 제목 없는 기사가 하나라도 저장되면 모든 검색이 실패하는 문제였습니다. 작성 단계에서 제목이 비어 있으면 **400**을 반환하도록 막았고, 이때 검사를 저장 **전**에 해야 잘못된 데이터가 저장되지 않는다는 것도 확인했습니다.
 
 
-  ## 11. AI 활용
+## 8. AI 활용
 
 - 작성한 코드의 리뷰와 버그 확인 (주소 매핑 오류, 저장 순서 문제 등)
 - 개념 학습 (제네릭, `static`/`final`, 람다, `ResponseEntity`, 전역 예외 처리, 필터)
